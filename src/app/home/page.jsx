@@ -181,7 +181,7 @@ export default function Homepage() {
             />
           </div> */}
 
-          <div className="col-span-12 lg:col-span-6 px-4 py-3 relative h-full bg-black flex items-center justify-center">
+          <div className="col-span-12 lg:col-span-6 px-4 py-3 relative h-full  flex items-center justify-center">
             <Image
               src="/white.jpg" // Replace with your image path
               alt="Aliza Yaseen"
