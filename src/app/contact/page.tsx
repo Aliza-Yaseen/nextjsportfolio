@@ -1,12 +1,13 @@
+
 'use client';
 import { useState } from 'react';
-import emailjs from 'emailjs-com'; // Ensure you have this installed: npm install emailjs-com
+import emailjs from '@emailjs/browser'; // ✅ Updated recommended package
 import Navbar from '../components/navbar';
 
-// Replace with your EmailJS credentials
-const SERVICE_ID = 'service_phzjksi';
-const TEMPLATE_ID = 'template_of9qbbp';
-const PUBLIC_KEY = 'TMkbIaSODV0aUtYZO';
+// ✅ Use your updated EmailJS credentials
+const SERVICE_ID = 'service_phzjksi';  // Updated Service ID
+const TEMPLATE_ID = 'template_vvtc4ad'; // Updated Template ID
+const PUBLIC_KEY = '_QvO2jdYjoV_GIQYS'; // Updated Public Key
 
 export default function ContactForm() {
     const [formData, setFormData] = useState({
@@ -14,7 +15,7 @@ export default function ContactForm() {
         email: '',
         message: ''
     });
-    const [status, setStatus] = useState(''); // For feedback messages
+    const [status, setStatus] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -26,16 +27,34 @@ export default function ContactForm() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setStatus(''); // Reset status before sending
+        setStatus(''); // Reset status on each form submit
+
+        // Check if all fields are filled out
+        if (!formData.name || !formData.email || !formData.message) {
+            setStatus('Please fill out all fields.');
+            return;
+        }
 
         try {
-            const response = await emailjs.send(SERVICE_ID, TEMPLATE_ID, formData, PUBLIC_KEY);
-            console.log('Email sent successfully:', response.status, response.text);
+            const response = await emailjs.send(
+                SERVICE_ID,         // Service ID
+                TEMPLATE_ID,        // Template ID
+                {
+                    name: formData.name,
+                    email: formData.email,
+                    message: formData.message,
+                    title: 'New Contact Form Submission',
+                    time: new Date().toLocaleString()
+                },
+                PUBLIC_KEY          // Public Key
+            );
+
+            console.log('SUCCESS:', response.status, response.text);
             setStatus('Email sent successfully!');
             setFormData({ name: '', email: '', message: '' }); // Reset form
-        } catch (err: unknown) {
-            console.error('Error sending email:', err);
-            setStatus('An error occurred while sending the email. Please try again.');
+        } catch (err) {
+            console.error('EMAILJS ERROR:', err);
+            setStatus('An error occurred while sending the email.');
         }
     };
 
